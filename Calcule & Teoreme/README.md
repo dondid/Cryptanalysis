@@ -1,16 +1,19 @@
-# Aplicația 1 Calculul Inversului Modulo
+# 🌼 Descriere: 
+![Image](https://github.com/user-attachments/assets/ea4d15c8-ca75-48d4-9d2d-ad2eaa64d274)
+
+# ✅ Aplicația 1 Calculul Inversului Modulo 
 ![Image](https://github.com/user-attachments/assets/188d6f09-e54a-4a35-aad8-630ceefb0a90)
 
-# Aplicatia 2 Teorema Chinezească a Resturilor
+# ✅ Aplicatia 2 Teorema Chinezească a Resturilor 
 ![Image](https://github.com/user-attachments/assets/21a487b5-afd7-4dfa-a329-c3ada3940b8f)
 
-# Aplicația 3 Ridicare Repetată la Pătrat
+# ✅ Aplicația 3 Ridicare Repetată la Pătrat 
 ![Image](https://github.com/user-attachments/assets/f107698b-f381-48f2-9954-963952038204)
 
-# Aplicația 4 Fracții Continue și Rezolvarea Ecuațiilor Diofantice
+# ✅ Aplicația 4 Fracții Continue și Rezolvarea Ecuațiilor Diofantice
 ![Image](https://github.com/user-attachments/assets/5ad76034-64a0-4285-a051-a011312acac9)
 
-# Toate -> terminal
+# ✅ Toate -> terminal 
 ==== APLICAȚII MATEMATICE ====
 1. Calculul inversului modulo m
 2. Teorema chinezească a resturilor
