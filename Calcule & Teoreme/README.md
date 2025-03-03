@@ -1,6 +1,6 @@
-# 🌼 Descriere: 
+# 🌼 Descriere aplicații propuse: 
 ![Image](https://github.com/user-attachments/assets/ea4d15c8-ca75-48d4-9d2d-ad2eaa64d274)
-
+# Pentru realizarea aplicatțiilor am ales să folosin limbajul de programare python. Cu ajutorul interfețelor intuitive putem realiza diferite calcule.
 # ✅ Aplicația 1 Calculul Inversului Modulo 
 ![Image](https://github.com/user-attachments/assets/188d6f09-e54a-4a35-aad8-630ceefb0a90)
 
