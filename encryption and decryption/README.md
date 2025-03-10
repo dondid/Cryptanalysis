@@ -1,3 +1,13 @@
+# Exercises proposed for solution
+![Image](https://github.com/user-attachments/assets/ea332992-493f-4c8a-b1b4-9a8ea127bdeb)
+
+# SIMPLE
+https://github.com/user-attachments/assets/7c354ee2-f41c-483c-83b4-51328cd0571e
+
+# EXTENDED
+https://github.com/user-attachments/assets/af67c759-1187-48cd-9146-ef049a58c746
+
+
 # Descriere pentru fiecare aplicație
 
 1: Cifrarea folosind Cifrul lui Cezar
