@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptography Tools</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        .matrix-input {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .matrix-input input {
+            width: 100%;
+            padding: 5px;
+            text-align: center;
+        }
+        .playfair-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .playfair-matrix div {
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cryptography Tools</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'permutation')">Permutation Cipher</div>
+            <div class="tab" onclick="openTab(event, 'playfair')">Playfair Cipher</div>
+            <div class="tab" onclick="openTab(event, 'hill')">Hill Cipher</div>
+        </div>
+        
+        <!-- Permutation Cipher Tab -->
+        <div id="permutation" class="tab-content active">
+            <h2>Permutation Cipher</h2>
+            <div class="form-group">
+                <label for="perm-text">Text:</label>
+                <input type="text" id="perm-text" placeholder="Enter your text to encrypt/decrypt">
+            </div>
+            <div class="form-group">
+                <label for="perm-key">Permutation (comma-separated numbers):</label>
+                <input type="text" id="perm-key" placeholder="e.g., 2,1,3" value="2,1,3">
+            </div>
+            <div class="form-group">
+                <button onclick="permutationEncrypt()">Encrypt</button>
+                <button onclick="permutationDecrypt()">Decrypt</button>
+            </div>
+            <div class="result" id="perm-result">
+                Result will appear here
+            </div>
+        </div>
+        
+        <!-- Playfair Cipher Tab -->
+        <div id="playfair" class="tab-content">
+            <h2>Playfair Cipher</h2>
+            <div class="form-group">
+                <label for="playfair-text">Ciphertext:</label>
+                <input type="text" id="playfair-text" placeholder="Enter ciphertext to decrypt">
+            </div>
+            <div class="form-group">
+                <label for="playfair-key">Keyword:</label>
+                <input type="text" id="playfair-key" placeholder="Enter keyword">
+            </div>
+            <div class="form-group">
+                <button onclick="playfairDecrypt()">Decrypt</button>
+                <button onclick="showPlayfairMatrix()">Show Matrix</button>
+            </div>
+            <div class="playfair-matrix" id="playfair-matrix"></div>
+            <div class="result" id="playfair-result">
+                Result will appear here
+            </div>
+        </div>
+        
+        <!-- Hill Cipher Tab -->
+        <div id="hill" class="tab-content">
+            <h2>Hill Cipher</h2>
+            <div class="form-group">
+                <label>Key Matrix (2x2):</label>
+                <div class="matrix-input">
+                    <input type="number" id="hill-key-00" value="19" min="0" max="25">
+                    <input type="number" id="hill-key-01" value="4" min="0" max="25">
+                    <input type="number" id="hill-key-10" value="18" min="0" max="25">
+                    <input type="number" id="hill-key-11" value="19" min="0" max="25">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="hill-text">Text:</label>
+                <input type="text" id="hill-text" placeholder="Enter text to encrypt/decrypt">
+            </div>
+            <div class="form-group">
+                <button onclick="hillEncrypt()">Encrypt</button>
+                <button onclick="hillDecrypt()">Decrypt</button>
+                <button onclick="findHillKey()">Find Key</button>
+            </div>
+            <div class="form-group">
+                <label for="hill-plaintext">Plaintext (for key finding):</label>
+                <input type="text" id="hill-plaintext" placeholder="Enter known plaintext (e.g., FRAC)">
+            </div>
+            <div class="form-group">
+                <label for="hill-ciphertext">Ciphertext (for key finding):</label>
+                <input type="text" id="hill-ciphertext" placeholder="Enter corresponding ciphertext (e.g., XWEG)">
+            </div>
+            <div class="result" id="hill-result">
+                Result will appear here
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].className = tabContents[i].className.replace(" active", "");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+
+        // Permutation Cipher Functions
+        function getInversePermutation(perm) {
+            const n = perm.length;
+            const inverse = new Array(n).fill(0);
+            for (let i = 0; i < n; i++) {
+                inverse[perm[i] - 1] = i + 1;
+            }
+            return inverse;
+        }
+
+        function permutationEncrypt() {
+            const text = document.getElementById("perm-text").value;
+            const permString = document.getElementById("perm-key").value;
+            const perm = permString.split(",").map(Number);
+            
+            const n = perm.length;
+            let processedText = text.replace(/ /g, "W");
+            
+            const blocks = [];
+            for (let i = 0; i < processedText.length; i += n) {
+                blocks.push(processedText.slice(i, i + n));
+            }
+            
+            let encryptedText = "";
+            for (let block of blocks) {
+                // Pad the block if needed
+                block = block.padEnd(n, "X");
+                
+                let encryptedBlock = "";
+                for (let i = 0; i < n; i++) {
+                    encryptedBlock += block[perm[i] - 1];
+                }
+                encryptedText += encryptedBlock;
+            }
+            
+            document.getElementById("perm-result").innerHTML = `
+                <strong>Original text:</strong> ${text}<br>
+                <strong>Encrypted text:</strong> ${encryptedText}<br>
+                <strong>Permutation used:</strong> ${perm.join(", ")}<br>
+                <strong>Inverse permutation:</strong> ${getInversePermutation(perm).join(", ")}
+            `;
+        }
+
+        function permutationDecrypt() {
+            const encryptedText = document.getElementById("perm-text").value;
+            const permString = document.getElementById("perm-key").value;
+            const perm = permString.split(",").map(Number);
+            
+            const inversePerm = getInversePermutation(perm);
+            const n = perm.length;
+            
+            const blocks = [];
+            for (let i = 0; i < encryptedText.length; i += n) {
+                blocks.push(encryptedText.slice(i, i + n));
+            }
+            
+            let decryptedText = "";
+            for (let block of blocks) {
+                let decryptedBlock = "";
+                for (let i = 0; i < n; i++) {
+                    decryptedBlock += block[inversePerm[i] - 1];
+                }
+                decryptedText += decryptedBlock;
+            }
+            
+            // Replace back spaces and remove padding
+            decryptedText = decryptedText.replace(/W/g, " ").replace(/X+$/, "");
+            
+            document.getElementById("perm-result").innerHTML = `
+                <strong>Encrypted text:</strong> ${encryptedText}<br>
+                <strong>Decrypted text:</strong> ${decryptedText}<br>
+                <strong>Permutation used:</strong> ${perm.join(", ")}<br>
+                <strong>Inverse permutation:</strong> ${inversePerm.join(", ")}
+            `;
+        }
+
+        // Playfair Cipher Functions
+        function generatePlayfairMatrix(keyword) {
+            const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // No J
+            keyword = keyword.toUpperCase().replace(/J/g, "I");
+            
+            // Remove duplicates from keyword
+            let uniqueKeyword = "";
+            for (let char of keyword) {
+                if (char.match(/[A-Z]/) && !uniqueKeyword.includes(char)) {
+                    uniqueKeyword += char;
+                }
+            }
+            
+            // Create matrix string
+            let matrixString = uniqueKeyword;
+            for (let char of alphabet) {
+                if (!matrixString.includes(char)) {
+                    matrixString += char;
+                }
+            }
+            
+            // Create 5x5 matrix
+            const matrix = [];
+            for (let i = 0; i < 5; i++) {
+                matrix.push(matrixString.slice(i * 5, (i + 1) * 5).split(""));
+            }
+            
+            return matrix;
+        }
+
+        function findPosition(matrix, letter) {
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    if (matrix[row][col] === letter) {
+                        return [row, col];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function playfairDecrypt() {
+            const ciphertext = document.getElementById("playfair-text").value.toUpperCase().replace(/\s/g, "");
+            const keyword = document.getElementById("playfair-key").value;
+            
+            if (ciphertext.length % 2 !== 0) {
+                document.getElementById("playfair-result").innerHTML = "Ciphertext length must be even.";
+                return;
+            }
+            
+            const matrix = generatePlayfairMatrix(keyword);
+            let plaintext = "";
+            
+            for (let i = 0; i < ciphertext.length; i += 2) {
+                const a = ciphertext[i];
+                const b = ciphertext[i + 1];
+                
+                const [rowA, colA] = findPosition(matrix, a);
+                const [rowB, colB] = findPosition(matrix, b);
+                
+                if (rowA === rowB) {
+                    plaintext += matrix[rowA][(colA - 1 + 5) % 5] + matrix[rowB][(colB - 1 + 5) % 5];
+                } else if (colA === colB) {
+                    plaintext += matrix[(rowA - 1 + 5) % 5][colA] + matrix[(rowB - 1 + 5) % 5][colB];
+                } else {
+                    plaintext += matrix[rowA][colB] + matrix[rowB][colA];
+                }
+            }
+            
+            // Remove X padding
+            plaintext = plaintext.replace(/X/g, "");
+            
+            document.getElementById("playfair-result").innerHTML = `
+                <strong>Ciphertext:</strong> ${ciphertext}<br>
+                <strong>Decrypted text:</strong> ${plaintext}<br>
+                <strong>Keyword used:</strong> ${keyword}
+            `;
+        }
+
+        function showPlayfairMatrix() {
+            const keyword = document.getElementById("playfair-key").value;
+            const matrix = generatePlayfairMatrix(keyword);
+            const matrixDiv = document.getElementById("playfair-matrix");
+            
+            matrixDiv.innerHTML = "";
+            
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    const cell = document.createElement("div");
+                    cell.textContent = matrix[row][col];
+                    matrixDiv.appendChild(cell);
+                }
+            }
+        }
+
+        // Hill Cipher Functions
+        function modInverse(a, m) {
+            // Extended Euclidean Algorithm
+            let [oldR, r] = [a, m];
+            let [oldS, s] = [1, 0];
+            let [oldT, t] = [0, 1];
+
+            while (r !== 0) {
+                const quotient = Math.floor(oldR / r);
+                [oldR, r] = [r, oldR - quotient * r];
+                [oldS, s] = [s, oldS - quotient * s];
+                [oldT, t] = [t, oldT - quotient * t];
+            }
+
+            // If GCD is not 1, there is no modular inverse
+            if (oldR !== 1) {
+                return null;
+            }
+
+            // Ensure the result is positive
+            return (oldS + m) % m;
+        }
+
+        function modInverseMatrix(matrix, mod) {
+            // Calculate determinant
+            const det = ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0])) % mod;
+            const detPositive = (det + mod) % mod;
+            
+            // Check if determinant is invertible
+            const detInv = modInverse(detPositive, mod);
+            if (detInv === null) {
+                return null;
+            }
+            
+            // Calculate adjugate matrix
+            const adjugate = [
+                [matrix[1][1], (-matrix[0][1] + mod) % mod],
+                [(-matrix[1][0] + mod) % mod, matrix[0][0]]
+            ];
+            
+            // Calculate inverse
+            const inverse = [
+                [(adjugate[0][0] * detInv) % mod, (adjugate[0][1] * detInv) % mod],
+                [(adjugate[1][0] * detInv) % mod, (adjugate[1][1] * detInv) % mod]
+            ];
+            
+            return inverse;
+        }
+
+        function textToNumbers(text) {
+            return text.toUpperCase().replace(/[^A-Z]/g, "").split("").map(char => char.charCodeAt(0) - 65);
+        }
+
+        function numbersToText(numbers) {
+            return numbers.map(num => String.fromCharCode((num % 26) + 65)).join("");
+        }
+
+        function hillEncrypt() {
+            const text = document.getElementById("hill-text").value.toUpperCase().replace(/[^A-Z]/g, "");
+            const keyMatrix = [
+                [parseInt(document.getElementById("hill-key-00").value), parseInt(document.getElementById("hill-key-01").value)],
+                [parseInt(document.getElementById("hill-key-10").value), parseInt(document.getElementById("hill-key-11").value)]
+            ];
+            
+            const textNumbers = textToNumbers(text);
+            
+            // Pad with 'X' if needed
+            while (textNumbers.length % 2 !== 0) {
+                textNumbers.push(23); // 'X' - 65 = 23
+            }
+            
+            let encryptedNumbers = [];
+            
+            for (let i = 0; i < textNumbers.length; i += 2) {
+                const vector = [textNumbers[i], textNumbers[i + 1]];
+                
+                // Matrix multiplication
+                const result = [
+                    (keyMatrix[0][0] * vector[0] + keyMatrix[0][1] * vector[1]) % 26,
+                    (keyMatrix[1][0] * vector[0] + keyMatrix[1][1] * vector[1]) % 26
+                ];
+                
+                encryptedNumbers.push(...result);
+            }
+            
+            const encryptedText = numbersToText(encryptedNumbers);
+            
+            document.getElementById("hill-result").innerHTML = `
+                <strong>Original text:</strong> ${text}<br>
+                <strong>Encrypted text:</strong> ${encryptedText}
+            `;
+        }
+
+        function hillDecrypt() {
+            const ciphertext = document.getElementById("hill-text").value.toUpperCase().replace(/[^A-Z]/g, "");
+            const keyMatrix = [
+                [parseInt(document.getElementById("hill-key-00").value), parseInt(document.getElementById("hill-key-01").value)],
+                [parseInt(document.getElementById("hill-key-10").value), parseInt(document.getElementById("hill-key-11").value)]
+            ];
+            
+            const keyInverse = modInverseMatrix(keyMatrix, 26);
+            
+            if (keyInverse === null) {
+                document.getElementById("hill-result").innerHTML = "Error: Matrix is not invertible modulo 26.";
+                return;
+            }
+            
+            const cipherNumbers = textToNumbers(ciphertext);
+            
+            if (cipherNumbers.length % 2 !== 0) {
+                document.getElementById("hill-result").innerHTML = "Error: Ciphertext length must be even.";
+                return;
+            }
+            
+            let decryptedNumbers = [];
+            
+            for (let i = 0; i < cipherNumbers.length; i += 2) {
+                const vector = [cipherNumbers[i], cipherNumbers[i + 1]];
+                
+                // Matrix multiplication with inverse
+                const result = [
+                    (keyInverse[0][0] * vector[0] + keyInverse[0][1] * vector[1]) % 26,
+                    (keyInverse[1][0] * vector[0] + keyInverse[1][1] * vector[1]) % 26
+                ];
+                
+                decryptedNumbers.push(...result);
+            }
+            
+            const decryptedText = numbersToText(decryptedNumbers);
+            
+            document.getElementById("hill-result").innerHTML = `
+                <strong>Ciphertext:</strong> ${ciphertext}<br>
+                <strong>Decrypted text:</strong> ${decryptedText}
+            `;
+        }
+
+        function findHillKey() {
+            const plaintext = document.getElementById("hill-plaintext").value.toUpperCase().replace(/[^A-Z]/g, "");
+            const ciphertext = document.getElementById("hill-ciphertext").value.toUpperCase().replace(/[^A-Z]/g, "");
+            
+            if (plaintext.length !== 4 || ciphertext.length !== 4) {
+                document.getElementById("hill-result").innerHTML = "Error: Both plaintext and ciphertext must be exactly 4 characters long.";
+                return;
+            }
+            
+            const P = textToNumbers(plaintext);
+            const C = textToNumbers(ciphertext);
+            
+            // Form 2x2 matrices
+            const M = [
+                [P[0], P[2]],
+                [P[1], P[3]]
+            ];
+            
+            const B = [
+                [C[0], C[2]],
+                [C[1], C[3]]
+            ];
+            
+            // Find M^-1
+            const M_inv = modInverseMatrix(M, 26);
+            
+            if (M_inv === null) {
+                document.getElementById("hill-result").innerHTML = "Error: Plaintext matrix is not invertible modulo 26.";
+                return;
+            }
+            
+            // Calculate A = M^-1 * B
+            const A = [
+                [(M_inv[0][0] * B[0][0] + M_inv[0][1] * B[1][0]) % 26, (M_inv[0][0] * B[0][1] + M_inv[0][1] * B[1][1]) % 26],
+                [(M_inv[1][0] * B[0][0] + M_inv[1][1] * B[1][0]) % 26, (M_inv[1][0] * B[0][1] + M_inv[1][1] * B[1][1]) % 26]
+            ];
+            
+            // Update the key matrix inputs
+            document.getElementById("hill-key-00").value = A[0][0];
+            document.getElementById("hill-key-01").value = A[0][1];
+            document.getElementById("hill-key-10").value = A[1][0];
+            document.getElementById("hill-key-11").value = A[1][1];
+            
+            document.getElementById("hill-result").innerHTML = `
+                <strong>Recovered Hill Cipher Key Matrix:</strong><br>
+                [${A[0][0]}, ${A[0][1]}]<br>
+                [${A[1][0]}, ${A[1][1]}]
+            `;
+        }
+    </script>
+</body>
+</html>

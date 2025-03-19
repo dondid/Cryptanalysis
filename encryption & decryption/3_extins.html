@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptography Tools</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        .matrix-input {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .matrix-input input {
+            width: 100%;
+            padding: 5px;
+            text-align: center;
+        }
+        .playfair-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        .playfair-matrix div {
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+        }
+        .algorithm-steps {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .algorithm-steps h3 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        .math-formula {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .explanation {
+            margin-bottom: 20px;
+        }
+        .explanation p {
+            text-align: justify;
+        }
+        .toggle-btn {
+            background-color: #34495e;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .toggle-content {
+            display: none;
+        }
+        .toggle-content.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cryptography Tools</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'permutation')">Permutation Cipher</div>
+            <div class="tab" onclick="openTab(event, 'playfair')">Playfair Cipher</div>
+            <div class="tab" onclick="openTab(event, 'hill')">Hill Cipher</div>
+        </div>
+        
+        <!-- Permutation Cipher Tab -->
+        <div id="permutation" class="tab-content active">
+            <h2>Permutation Cipher</h2>
+            
+            <button class="toggle-btn" onclick="toggleContent('perm-theory')">Show/Hide Theory</button>
+            <div class="toggle-content" id="perm-theory">
+                <div class="explanation">
+                    <h3>What is a Permutation Cipher?</h3>
+                    <p>The permutation cipher is a transposition cipher that rearranges characters in a message according to a fixed pattern, or permutation. Unlike substitution ciphers that replace characters, permutation ciphers keep the original characters but change their positions.</p>
+                    
+                    <h3>Mathematical Foundation</h3>
+                    <p>A permutation of n elements is a bijective function σ from the set {1, 2, ..., n} to itself. It can be represented as:</p>
+                    <div class="math-formula">
+                        σ = (1 2 3 ... n)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(σ(1) σ(2) σ(3) ... σ(n))
+                    </div>
+                    
+                    <h3>Encryption Algorithm</h3>
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Divide the plaintext into blocks of length n (where n is the length of the permutation).</li>
+                            <li>For each block, apply the permutation σ to rearrange the characters.</li>
+                            <li>If the last block is shorter than n characters, pad with a character (usually 'X').</li>
+                        </ol>
+                        <p>For each block, the character at position i moves to position σ(i).</p>
+                    </div>
+                    
+                    <h3>Decryption Algorithm</h3>
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Find the inverse permutation σ<sup>-1</sup>.</li>
+                            <li>Divide the ciphertext into blocks of length n.</li>
+                            <li>For each block, apply the inverse permutation to rearrange the characters.</li>
+                            <li>Remove any padding characters and restore spaces.</li>
+                        </ol>
+                        <p>For the inverse permutation, if σ(i) = j, then σ<sup>-1</sup>(j) = i.</p>
+                    </div>
+                    
+                    <h3>Example</h3>
+                    <p>If we have the permutation σ = (1 2 3) → (2 1 3), then we apply it as follows:</p>
+                    <div class="math-formula">
+                        For plaintext block "ABC":<br>
+                        - Character at position 1 ('A') moves to position 2<br>
+                        - Character at position 2 ('B') moves to position 1<br>
+                        - Character at position 3 ('C') remains at position 3<br>
+                        Result: "BAC"
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="perm-text">Text:</label>
+                <input type="text" id="perm-text" placeholder="Enter your text to encrypt/decrypt">
+            </div>
+            <div class="form-group">
+                <label for="perm-key">Permutation (comma-separated numbers):</label>
+                <input type="text" id="perm-key" placeholder="e.g., 2,1,3" value="2,1,3">
+            </div>
+            <div class="form-group">
+                <button onclick="permutationEncrypt()">Encrypt</button>
+                <button onclick="permutationDecrypt()">Decrypt</button>
+            </div>
+            <div class="result" id="perm-result">
+                Result will appear here
+            </div>
+            
+            <div id="perm-steps" class="algorithm-steps" style="display: none;">
+                <h3>Step-by-Step Solution</h3>
+                <div id="perm-steps-content"></div>
+            </div>
+        </div>
+        
+        <!-- Playfair Cipher Tab -->
+        <div id="playfair" class="tab-content">
+            <h2>Playfair Cipher</h2>
+            
+            <button class="toggle-btn" onclick="toggleContent('playfair-theory')">Show/Hide Theory</button>
+            <div class="toggle-content" id="playfair-theory">
+                <div class="explanation">
+                    <h3>What is a Playfair Cipher?</h3>
+                    <p>The Playfair cipher is a manual symmetric encryption technique that encrypts pairs of letters (digraphs) instead of single letters. It was invented by Charles Wheatstone in 1854 but bears the name of Lord Playfair who promoted its use.</p>
+                    
+                    <h3>Mathematical Foundation</h3>
+                    <p>The Playfair cipher uses a 5×5 grid of letters constructed using a keyword. The grid is filled with the letters of the keyword (with duplicates removed) followed by the remaining letters of the alphabet (usually excluding J, which is combined with I).</p>
+                    
+                    <h3>Encryption Rules</h3>
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Divide the plaintext into pairs of letters (digraphs).</li>
+                            <li>If both letters in a pair are the same, insert a separation character (usually 'X') between them.</li>
+                            <li>If the number of letters is odd, add a padding letter (usually 'X') at the end.</li>
+                            <li>For each digraph, apply the following rules:
+                                <ul>
+                                    <li>If both letters are in the same row, replace each with the letter to its right (wrapping around to the left side of the row if necessary).</li>
+                                    <li>If both letters are in the same column, replace each with the letter below it (wrapping around to the top of the column if necessary).</li>
+                                    <li>If neither of the above apply, form a rectangle with the two letters and replace each letter with the letter on the same row but in the column of the other letter.</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                    
+                    <h3>Decryption Rules</h3>
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Divide the ciphertext into pairs of letters.</li>
+                            <li>For each digraph, apply the following rules:
+                                <ul>
+                                    <li>If both letters are in the same row, replace each with the letter to its left (wrapping around to the right side of the row if necessary).</li>
+                                    <li>If both letters are in the same column, replace each with the letter above it (wrapping around to the bottom of the column if necessary).</li>
+                                    <li>If neither of the above apply, form a rectangle with the two letters and replace each letter with the letter on the same row but in the column of the other letter (same as encryption).</li>
+                                </ul>
+                            </li>
+                            <li>Remove any padding letters and separation characters.</li>
+                        </ol>
+                    </div>
+                    
+                    <h3>Example</h3>
+                    <p>For the keyword "KEYWORD" and plaintext "HELLO", the encryption process would be:</p>
+                    <div class="math-formula">
+                        1. Create the 5×5 matrix with the keyword "KEYWORD" (without duplicates)<br>
+                        2. Divide "HELLO" into digraphs: "HE" "LL" "O"<br>
+                        3. Since "LL" has repeated letters, insert 'X': "HE" "LX" "LO"<br>
+                        4. Apply encryption rules to each digraph<br>
+                        5. Result might be: "FZ" "MV" "KP"
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="playfair-text">Ciphertext:</label>
+                <input type="text" id="playfair-text" placeholder="Enter ciphertext to decrypt">
+            </div>
+            <div class="form-group">
+                <label for="playfair-key">Keyword:</label>
+                <input type="text" id="playfair-key" placeholder="Enter keyword">
+            </div>
+            <div class="form-group">
+                <button onclick="playfairDecrypt()">Decrypt</button>
+                <button onclick="showPlayfairMatrix()">Show Matrix</button>
+            </div>
+            <div class="playfair-matrix" id="playfair-matrix"></div>
+            <div class="result" id="playfair-result">
+                Result will appear here
+            </div>
+            
+            <div id="playfair-steps" class="algorithm-steps" style="display: none;">
+                <h3>Step-by-Step Solution</h3>
+                <div id="playfair-steps-content"></div>
+            </div>
+        </div>
+        
+        <!-- Hill Cipher Tab -->
+        <div id="hill" class="tab-content">
+            <h2>Hill Cipher</h2>
+            
+            <button class="toggle-btn" onclick="toggleContent('hill-theory')">Show/Hide Theory</button>
+            <div class="toggle-content" id="hill-theory">
+                <div class="explanation">
+                    <h3>What is a Hill Cipher?</h3>
+                    <p>The Hill cipher is a polygraphic substitution cipher based on linear algebra. It was invented by Lester S. Hill in 1929 and uses matrix multiplication to encrypt blocks of text.</p>
+                    
+                    <h3>Mathematical Foundation</h3>
+                    <p>The Hill cipher uses a square matrix of size n×n as the key. The plaintext is divided into blocks of length n, and each block is treated as a vector. The encryption process involves multiplying each vector by the key matrix.</p>
+                    
+                    <div class="math-formula">
+                        Let A be the n×n key matrix, and P be a plaintext vector of length n.<br>
+                        Then the ciphertext vector C is calculated as:<br>
+                        C = A × P (mod 26)
+                    </div>
+                    
+                    <h3>Encryption Algorithm</h3>
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Convert the plaintext letters to numbers (A=0, B=1, ..., Z=25).</li>
+                            <li>Divide the plaintext numbers into vectors of length n.</li>
+                            <li>Multiply each vector by the key matrix A.</li>
+                            <li>Take modulo 26 of each resulting number.</li>
+                            <li>Convert the numbers back to letters.</li>
+                        </ol>
+                    </div>
+                    
+                    <h3>Decryption Algorithm</h3>
+                    <div class="algorithm-steps">
+                        <ol>
+                            <li>Find the inverse of the key matrix A modulo 26.</li>
+                            <li>Convert the ciphertext letters to numbers.</li>
+                            <li>Divide the ciphertext into vectors of length n.</li>
+                            <li>Multiply each vector by the inverse matrix A<sup>-1</sup>.</li>
+                            <li>Take modulo 26 of each resulting number.</li>
+                            <li>Convert the numbers back to letters.</li>
+                        </ol>
+                    </div>
+                    
+                    <h3>Finding the Inverse Matrix (For 2×2 Matrix)</h3>
+                    <p>For a 2×2 matrix A = [a b; c d], the inverse modulo 26 is calculated as:</p>
+                    <div class="math-formula">
+                        1. Calculate determinant: det = ad - bc (mod 26)<br>
+                        2. Find modular multiplicative inverse of det: det_inv = det^(-1) (mod 26)<br>
+                        3. Calculate adjugate matrix: adj = [d -b; -c a] (mod 26)<br>
+                        4. Multiply: A^(-1) = det_inv × adj (mod 26)
+                    </div>
+                    
+                    <h3>Example</h3>
+                    <p>For the key matrix A = [2 3; 1 4] and plaintext "HELP":</p>
+                    <div class="math-formula">
+                        1. Convert to numbers: H=7, E=4, L=11, P=15<br>
+                        2. Form vectors: [7, 4] and [11, 15]<br>
+                        3. Multiply by key matrix:<br>
+                        [2 3] × [7] = [2×7 + 3×4] = [14 + 12] = [26] = [0] (mod 26) = 'A'<br>
+                        [1 4] × [4] = [1×7 + 4×4] = [7 + 16] = [23] = [23] (mod 26) = 'X'<br>
+                        Similarly for the second vector<br>
+                        4. Result: "AXYZ" (where Y and Z are the results for the second vector)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Key Matrix (2x2):</label>
+                <div class="matrix-input">
+                    <input type="number" id="hill-key-00" value="19" min="0" max="25">
+                    <input type="number" id="hill-key-01" value="4" min="0" max="25">
+                    <input type="number" id="hill-key-10" value="18" min="0" max="25">
+                    <input type="number" id="hill-key-11" value="19" min="0" max="25">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="hill-text">Text:</label>
+                <input type="text" id="hill-text" placeholder="Enter text to encrypt/decrypt">
+            </div>
+            <div class="form-group">
+                <button onclick="hillEncrypt()">Encrypt</button>
+                <button onclick="hillDecrypt()">Decrypt</button>
+                <button onclick="findHillKey()">Find Key</button>
+            </div>
+            <div class="form-group">
+                <label for="hill-plaintext">Plaintext (for key finding):</label>
+                <input type="text" id="hill-plaintext" placeholder="Enter known plaintext (e.g., FRAC)">
+            </div>
+            <div class="form-group">
+                <label for="hill-ciphertext">Ciphertext (for key finding):</label>
+                <input type="text" id="hill-ciphertext" placeholder="Enter corresponding ciphertext (e.g., XWEG)">
+            </div>
+            <div class="result" id="hill-result">
+                Result will appear here
+            </div>
+            
+            <div id="hill-steps" class="algorithm-steps" style="display: none;">
+                <h3>Step-by-Step Solution</h3>
+                <div id="hill-steps-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].className = tabContents[i].className.replace(" active", "");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+
+        // Toggle content visibility
+        function toggleContent(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle("show");
+        }
+
+        // Permutation Cipher Functions
+        function getInversePermutation(perm) {
+            const n = perm.length;
+            const inverse = new Array(n).fill(0);
+            for (let i = 0; i < n; i++) {
+                inverse[perm[i] - 1] = i + 1;
+            }
+            return inverse;
+        }
+
+        function permutationEncrypt() {
+            const text = document.getElementById("perm-text").value;
+            const permString = document.getElementById("perm-key").value;
+            const perm = permString.split(",").map(Number);
+            
+            const n = perm.length;
+            let processedText = text.replace(/ /g, "W");
+            
+            const blocks = [];
+            for (let i = 0; i < processedText.length; i += n) {
+                blocks.push(processedText.slice(i, i + n));
+            }
+            
+            let encryptedText = "";
+            let stepsContent = "";
+            
+            stepsContent += `<p><strong>Original text:</strong> ${text}</p>`;
+            stepsContent += `<p><strong>Permutation:</strong> ${perm.join(", ")}</p>`;
+            stepsContent += `<p><strong>Spaces replaced with 'W':</strong> ${processedText}</p>`;
+            stepsContent += `<p><strong>Block size:</strong> ${n}</p>`;
+            stepsContent += `<p><strong>Blocks:</strong> ${blocks.join(", ")}</p>`;
+            stepsContent += `<p><strong>Encryption process:</strong></p>`;
+            
+            for (let block of blocks) {
+                // Pad the block if needed
+                const originalBlock = block;
+                block = block.padEnd(n, "X");
+                
+                let encryptedBlock = "";
+                let blockSteps = `<p>Block: "${originalBlock}" (padded to "${block}")</p>`;
+                blockSteps += `<ul>`;
+                
+                for (let i = 0; i < n; i++) {
+                    encryptedBlock += block[perm[i] - 1];
+                    blockSteps += `<li>Position ${i+1} gets the character at position ${perm[i]} (${block[perm[i] - 1]})</li>`;
+                }
+                
+                blockSteps += `</ul>`;
+                blockSteps += `<p>Encrypted block: "${encryptedBlock}"</p>`;
+                stepsContent += blockSteps;
+                
+                encryptedText += encryptedBlock;
+            }
+            
+            stepsContent += `<p><strong>Final encrypted text:</strong> ${encryptedText}</p>`;
+            
+            document.getElementById("perm-result").innerHTML = `
+                <strong>Original text:</strong> ${text}<br>
+                <strong>Encrypted text:</strong> ${encryptedText}<br>
+                <strong>Permutation used:</strong> ${perm.join(", ")}<br>
+                <strong>Inverse permutation:</strong> ${getInversePermutation(perm).join(", ")}
+            `;
+            
+            document.getElementById("perm-steps-content").innerHTML = stepsContent;
+            document.getElementById("perm-steps").style.display = "block";
+        }
+
+        function permutationDecrypt() {
+            const encryptedText = document.getElementById("perm-text").value;
+            const permString = document.getElementById("perm-key").value;
+            const perm = permString.split(",").map(Number);
+            
+            const inversePerm = getInversePermutation(perm);
+            const n = perm.length;
+            
+            const blocks = [];
+            for (let i = 0; i < encryptedText.length; i += n) {
+                blocks.push(encryptedText.slice(i, i + n));
+            }
+            
+            let decryptedText = "";
+            let stepsContent = "";
+            
+            stepsContent += `<p><strong>Encrypted text:</strong> ${encryptedText}</p>`;
+            stepsContent += `<p><strong>Permutation:</strong> ${perm.join(", ")}</p>`;
+            stepsContent += `<p><strong>Inverse permutation:</strong> ${inversePerm.join(", ")}</p>`;
+            stepsContent += `<p><strong>Block size:</strong> ${n}</p>`;
+            stepsContent += `<p><strong>Blocks:</strong> ${blocks.join(", ")}</p>`;
+            stepsContent += `<p><strong>Decryption process:</strong></p>`;
+            
+            for (let block of blocks) {
+                let decryptedBlock = "";
+                let blockSteps = `<p>Block: "${block}"</p>`;
+                blockSteps += `<ul>`;
+                
+                for (let i = 0; i < n; i++) {
+                    decryptedBlock += block[inversePerm[i] - 1];
+                    blockSteps += `<li>Position ${i+1} gets the character at position ${inversePerm[i]} (${block[inversePerm[i] - 1]})</li>`;
+                }
+                
+                blockSteps += `</ul>`;
+                blockSteps += `<p>Decrypted block: "${decryptedBlock}"</p>`;
+                stepsContent += blockSteps;
+                
+                decryptedText += decryptedBlock;
+            }
+            
+            // Replace back spaces and remove padding
+            const finalDecryptedText = decryptedText.replace(/W/g, " ").replace(/X+$/, "");
+            stepsContent += `<p><strong>Replace 'W' with spaces and remove padding:</strong> ${finalDecryptedText}</p>`;
+            
+            document.getElementById("perm-result").innerHTML = `
+                <strong>Encrypted text:</strong> ${encryptedText}<br>
+                <strong>Decrypted text:</strong> ${finalDecryptedText}<br>
+                <strong>Permutation used:</strong> ${perm.join(", ")}<br>
+                <strong>Inverse permutation:</strong> ${inversePerm.join(", ")}
+            `;
+            
+            document.getElementById("perm-steps-content").innerHTML = stepsContent;
+            document.getElementById("perm-steps").style.display = "block";
+        }
+
+        // Playfair Cipher Functions
+        function generatePlayfairMatrix(keyword) {
+            const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"; // No J
+            keyword = keyword.toUpperCase().replace(/J/g, "I");
+            
+            // Remove duplicates from keyword
+            let uniqueKeyword = "";
+            for (let char of keyword) {
+                if (char.match(/[A-Z]/) && !uniqueKeyword.includes(char)) {
+                    uniqueKeyword += char;
+                }
+            }
+            
+            // Create matrix string
+            let matrixString = uniqueKeyword;
+            for (let char of alphabet) {
+                if (!matrixString.includes(char)) {
+                    matrixString += char;
+                }
+            }
+            
+            // Create 5x5 matrix
+            const matrix = [];
+            for (let i = 0; i < 5; i++) {
+                matrix.push(matrixString.slice(i * 5, (i + 1) * 5).split(""));
+            }
+            
+            return matrix;
+        }
+
+        function findPosition(matrix, letter) {
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    if (matrix[row][col] === letter) {
+                        return [row, col];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function playfairDecrypt() {
+            const ciphertext = document.getElementById("playfair-text").value.toUpperCase().replace(/\s/g, "");
+            const keyword = document.getElementById("playfair-key").value;
+            
+            if (ciphertext.length % 2 !== 0) {
+                document.getElementById("playfair-result").innerHTML = "Ciphertext length must be even.";
+                return;
+            }
+            
+            const matrix = generatePlayfairMatrix(keyword);
+            let plaintext = "";
+            let stepsContent = "";
+            
+            stepsContent += `<p><strong>Ciphertext:</strong> ${ciphertext}</p>`;
+            stepsContent += `<p><strong>Keyword:</strong> ${keyword}</p>`;
+            
+            // Show matrix
+            stepsContent += `<p><strong>Playfair matrix:</strong></p>`;
+            stepsContent += `<table border="1" cellpadding="5" style="border-collapse: collapse;">`;
+            for (let row = 0; row < 5; row++) {
+                stepsContent += `<tr>`;
+                for (let col = 0; col < 5; col++) {
+                    stepsContent += `<td>${matrix[row][col]}</td>`;
+                }
+                stepsContent += `</tr>`;
+            }
+            stepsContent += `</table>`;
+            
+            // Decrypt
+            stepsContent += `<p><strong>Decryption process:</strong></p>`;
+            
+            for (let i = 0; i < ciphertext.length; i += 2) {
+                const a = ciphertext[i];
+                const b = ciphertext[i + 1];
+                
+                const [rowA, colA] = findPosition(matrix, a);
+                const [rowB, colB] = findPosition(matrix, b);
+                
+                let char1, char2;
+                let rule = "";
+                
+                if (rowA === rowB) {
+                    // Same row
+                    char1 = matrix[rowA][(colA - 1 + 5) % 5];
+                    char2 = matrix[rowB][(colB - 1 + 5) % 5];
+                    rule = `Same row (${rowA + 1} - ${colA + 1})`;
+                } else if (colA === colB) {
+                    // Same column
+                    char1 = matrix[(rowA - 1 + 5) % 5][colA];
+                    char2 = matrix[(rowB - 1 + 5) % 5][colB];
+                    rule = `Same column (${rowA + 1} - ${colA + 1})`;
+                } else {
+                    // Form rectangle
+                    char1 = matrix[rowA][colB];
+                    char2 = matrix[rowB][colA];
+                    rule = `Rectangle (${rowA + 1} - ${colA + 1}) and (${rowB + 1} - ${colB + 1})`;
+                }
+
+                plaintext += char1 + char2;
+                stepsContent += `<p>Decrypt "${a}${b}" using rule: ${rule} → "${char1}${char2}"</p>`;
+            }
+        }
+    </script>
+</body>
+</html> 
+    
