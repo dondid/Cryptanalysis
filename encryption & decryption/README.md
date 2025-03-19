@@ -47,7 +47,9 @@ Recovered Hill Cipher Key Matrix A from chosen plaintext attack (BRAD, LKGP):
 https://github.com/user-attachments/assets/b68d450e-94cb-45ce-838c-55ec3573ca75
 
 3_extins.html
+
 ![Image](https://github.com/user-attachments/assets/f6475e04-8e59-4610-838f-6f5a10f4707a)
 
 3_simple.html
+
 ![Image](https://github.com/user-attachments/assets/81ff1cf1-3ecf-4659-a353-53ec8b03a923)
