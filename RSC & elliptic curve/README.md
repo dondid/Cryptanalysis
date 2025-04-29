@@ -1,3 +1,10 @@
+#Exerciții propuse
+![image](https://github.com/user-attachments/assets/96415a98-ffd2-4f14-9071-ca92142c5dc1)
+
+#Interfată
+
+https://github.com/user-attachments/assets/bd7504be-55b4-4f03-bed2-9faac081121e
+
 # Instrucțiuni de instalare și utilizare a aplicațiilor criptografice
 
 ## Cerințe de sistem
