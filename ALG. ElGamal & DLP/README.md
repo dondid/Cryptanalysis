@@ -1,3 +1,10 @@
+# Aplicații propuse
+![image](https://github.com/user-attachments/assets/40e45aa0-e1b4-4b5f-a623-70b798930a5c)
+
+# Desfașurare
+
+https://github.com/user-attachments/assets/52309c31-72d6-4aad-8bda-60ebec8b752e
+
 # Vizualizator pentru Problema Logaritmului Discret (DLP)
 
 Această aplicație oferă o interfață grafică interactivă pentru înțelegerea și vizualizarea **problemei logaritmului discret** (DLP - Discrete Logarithm Problem) și a algoritmilor principali utilizați pentru rezolvarea acesteia.
